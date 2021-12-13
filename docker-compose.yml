@@ -1,0 +1,36 @@
+version: '3.1'
+
+services:
+
+    demo-mysql-master:
+        image: mysql:8
+        container_name: demo-mysql-master
+        restart: always
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
+            - ./mysql-master/conf.d/docker.cnf:/etc/mysql/conf.d/docker.cnf
+            - ./mysql-master/sql:/docker-entrypoint-initdb.d
+#           - ../binlogdemo_data/master:/var/lib/mysql
+        environment:
+            TZ: Asia/Shanghai
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_DATABASE: demo
+            MYSQL_USER: master
+            MYSQL_PASSWORD: password
+
+    demo-mysql-slave:
+        image: mysql:8
+        container_name: demo-mysql-slave
+        restart: always
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
+            - ./mysql-slave/conf.d/docker.cnf:/etc/mysql/conf.d/docker.cnf
+            - ./mysql-slave/sql:/docker-entrypoint-initdb.d
+#           - ../binlogdemo_data/slave:/var/lib/mysql
+        environment:
+            TZ: Asia/Shanghai
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_DATABASE: demo
+            MYSQL_USER: slave
+            MYSQL_PASSWORD: password
+
