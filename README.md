@@ -7,7 +7,7 @@ binlog-do-db=demo # 指定要同步的数据库
 ```
 ## 从库
 ```
-server-id=2 # 服务器id, 不能与主库相同
+server-id=2 # 服务器 id, 不能与主库相同
 replicate_wild_do_table=demo.% # 指定要同步的数据库
 ```
 # 启动服务
