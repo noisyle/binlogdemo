@@ -3,12 +3,13 @@ version: '3.1'
 services:
 
     demo-mysql-master:
-        image: mysql:8
+        image: mysql:5.7
         container_name: demo-mysql-master
+        command: --default-authentication-plugin=mysql_native_password
         restart: always
         volumes:
             - /etc/localtime:/etc/localtime:ro
-            - ./mysql-master/conf.d/docker.cnf:/etc/mysql/conf.d/docker.cnf
+            - ./mysql-master/my.cnf:/etc/mysql/my.cnf
             - ./mysql-master/sql:/docker-entrypoint-initdb.d
 #           - ../binlogdemo_data/master:/var/lib/mysql
         environment:
@@ -19,12 +20,13 @@ services:
             MYSQL_PASSWORD: password
 
     demo-mysql-slave:
-        image: mysql:8
+        image: mysql:5.7
         container_name: demo-mysql-slave
+        command: --default-authentication-plugin=mysql_native_password
         restart: always
         volumes:
             - /etc/localtime:/etc/localtime:ro
-            - ./mysql-slave/conf.d/docker.cnf:/etc/mysql/conf.d/docker.cnf
+            - ./mysql-slave/my.cnf:/etc/mysql/my.cnf
             - ./mysql-slave/sql:/docker-entrypoint-initdb.d
 #           - ../binlogdemo_data/slave:/var/lib/mysql
         environment:
