@@ -2,14 +2,14 @@
 ## 主库
 ```
 server-id=1 # 服务器 id, 每台服务器必须唯一
-log-bin=mysql-bin # 设置 bin-log 名称
+log-bin=mysql-bin # 设置 log-bin 名称
 binlog-do-db=demo # 设置要同步的数据库名称
 ```
 ## 从库
 ```
 server-id=2 # 服务器 id, 不能与主库相同
-replicate-wild-do-table=demo.% # 设置要同步的数据库名称
 relay-log=mysql-relay-bin # 设置 relay-log 名称
+replicate-wild-do-table=demo.% # 设置要同步的数据库名称
 ```
 # 启动服务
 ```
@@ -32,7 +32,7 @@ show master status;
 ```
 记录输出信息中的日志文件和位点信息，如下图。
 
-![Image](Screenshot_1.png)
+![Screenshot](screenshot1.png)
 # 配置从库
 ## 使用 root 登录从库
 ```
@@ -47,7 +47,8 @@ show slave status\G
 ```
 命令中的日志文件和位点信息需要按照配置主库时记录的值进行填写。配置成功后输出如下信息。
 
-![Image](Screenshot_2.png)
+
+![Screenshot](screenshot2.png)
 # 备注
 - 本例中使用显式设置位点的方式开始同步，需要在开始同步前**保证主从库状态相同**。
 - 同步数据库(表)的相关配置有:
@@ -72,3 +73,4 @@ show slave status\G
   > Neither --relay-log nor --relay-log-index were used; so replication may break when this MySQL server acts as a slave and has his hostname changed!!
 
   当前服务器作为从库，由于未设置 relay-log，MySQL 将使用主机名作为 ralay-log 名称，如果此后主机名发生变化，将导致找不到 ralay-log 从而断开同步。显式设置 relay-log 后，警告消除。
+- 要实现 A->B->C 形式的级联同步，B 节点除了要同时添加主库和从库的配置外，还要额外增加一句 `log-slave-updates=1` 的配置，将作为从库同步过来的修改写入 log-bin，以便让 C 节点能够同步到。
